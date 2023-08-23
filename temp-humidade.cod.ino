@@ -1,16 +1,14 @@
 // Example testing sketch for various DHT humidity/temperature sensors
 // Written by ladyada, public domain
 
+// The current code is based in exemple from the library and modificated to integrate a display, a LED RGB and a button
+
 // REQUIRES the following Arduino libraries:
 // - DHT Sensor Library: https://github.com/adafruit/DHT-sensor-library
 // - Adafruit Unified Sensor Lib: https://github.com/adafruit/Adafruit_Sensor
 #include <Adafruit_Sensor.h>
-#include "DHT.h"
-
-#define DHTPIN 5     // Digital pin connected to the DHT sensor
-// Feather HUZZAH ESP8266 note: use pins 3, 4, 5, 12, 13 or 14 --
-// Pin 15 can work but DHT must be disconnected during program upload.
 #include <LiquidCrystal_I2C.h>
+#include "DHT.h"
 
 LiquidCrystal_I2C lcd(0x3F,16,2);
 
@@ -18,23 +16,10 @@ LiquidCrystal_I2C lcd(0x3F,16,2);
 #define red 4
 #define green 3
 #define blue 2
-// Uncomment whatever type you're using!
-//#define DHTTYPE DHT11   // DHT 11
+
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
-//#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
-// Connect pin 1 (on the left) of the sensor to +5V
-// NOTE: If using a board with 3.3V logic like an Arduino Due connect pin 1
-// to 3.3V instead of 5V!
-// Connect pin 2 of the sensor to whatever your DHTPIN is
-// Connect pin 3 (on the right) of the sensor to GROUND (if your sensor has 3 pins)
-// Connect pin 4 (on the right) of the sensor to GROUND and leave the pin 3 EMPTY (if your sensor has 4 pins)
-// Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
 
-// Initialize DHT sensor.
-// Note that older versions of this library took an optional third parameter to
-// tweak the timings for faster processors.  This parameter is no longer needed
-// as the current DHT reading algorithm adjusts itself to work on faster procs.
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
@@ -43,7 +28,7 @@ void setup() {
 
   dht.begin();
 
-lcd.init();                      // initialize the lcd 
+lcd.init();  // initialize the lcd 
   // Print a message to the LCD.
   lcd.backlight();
   lcd.setCursor(0,0);
@@ -93,7 +78,7 @@ void loop() {
   Serial.print(hif);
   Serial.println(F("°F"));
 
- // display
+ // display temperature and humidity
   lcd.setCursor(0,1);
   lcd.print(hic);
   lcd.setCursor(6,1);
@@ -107,7 +92,7 @@ void loop() {
  
 }
 
-void ledON(float temp)
+void ledON(float temp) // change LED's color based on temperature
 {
   if (temp >= 35){   
     offled();
@@ -123,7 +108,7 @@ void ledON(float temp)
     }
 }
 
-void offled()
+void offled() // turn all the LEDs off
 {
   digitalWrite(red, LOW);
   digitalWrite(green, LOW);
